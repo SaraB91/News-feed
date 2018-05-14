@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import { getTopHeadlines, getCompleteSources } from './API-SRC/top-headlines.js';
 
+const selectDropDown = (key, sources) => <option key={key} value={sources[key].id}>{sources[key].name}</option>
+const showList = (key, articles) => <li key={key}><a href={articles[key].url} target='_blank'><h3>{articles[key].title}</h3></a> <p>{articles[key].publishedAt} <span>{articles[key].author}</span></p></li>
 const StyledApp = styled.div`
  text-align: center;
  padding:20px 50px;
@@ -73,7 +76,49 @@ const Button = styled.button`
   cursor:pointer;
 `;
 class Feed extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            articles: {},
+            sources: {},
+            currentSource : 'abc-news', 
+            view: 5,
+            links:[],
+            details:[],
+        }
+        this.selectSource = this.selectSource.bind(this);
+        this.showMoreLinks = this.showMoreLinks.bind(this);
+        
+    }
+    
+    componentDidMount() {
+    
+      getTopHeadlines(this.state.currentSource).then(response => {
+        this.setState({ articles: response.data.articles.slice(0, 5) })
+        // console.log(response.data.articles);
+      });
+      
+      getCompleteSources().then(res => {
+        console.log(res.data.sources);
+        this.setState({ sources: res.data.sources })
+      })
+    }
+    
+    selectSource(event) {
+      getTopHeadlines(event.currentTarget.value).then(response => {
+          this.setState({ articles: response.data.articles.slice(0, 5) })
+      })
+      this.setState({  currentSource : event.currentTarget.value});
+    }
+      showMoreLinks(event) {    
+            getTopHeadlines(this.state.currentSource).then(response => { 
+                const articles = this.state.view === 5 ? response.data.articles : response.data.articles.slice(0, 5);
+                this.setState({ articles: articles });
+                this.state.view === 5 ? this.setState({ view: 10 }) : this.setState({ view:5 });
+            })
+        }
     render() {
+        const { articles, sources, view } = this.state
         return (
         <StyledApp>
         <ResultData>
@@ -82,13 +127,23 @@ class Feed extends Component {
             <h4>News</h4>  
           </TextHeading>
           <StyledDropDown>
-            <select >
-            <option  selected disabled hidden>Filter By Source</option>         
+            <select onChange={this.selectSource}>
+            <option  selected disabled hidden>Filter By Source</option>
+            {
+              Object.keys(sources).map(key => selectDropDown(key, sources))
+            }           
             </select>
           </StyledDropDown>
         </StyledHeading> 
         <div>
-        <Button>Show more </Button>
+          <ul>
+            {
+                Object.keys(articles).map((key) => showList(key, articles))
+            }
+          </ul>
+        </div>
+        <div>
+        <Button onClick={this.showMoreLinks}>{view === 5 ? `Show More` : `Show Less`}</Button>
         </div>
         </ResultData>
       </StyledApp>
