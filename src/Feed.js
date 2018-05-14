@@ -64,7 +64,14 @@ const ResultData = styled.div`
  }
 
 `;
-
+const Button = styled.button`
+  padding: 10px;
+  background: #fff;
+  border: 3px solid red;
+  color: red;
+  font-weight:bold;
+  cursor:pointer;
+`;
 class Feed extends Component {
     render() {
         return (
@@ -80,6 +87,9 @@ class Feed extends Component {
             </select>
           </StyledDropDown>
         </StyledHeading> 
+        <div>
+        <Button>Show more </Button>
+        </div>
         </ResultData>
       </StyledApp>
           );
