@@ -7,7 +7,7 @@ const showList = (key, articles) => <li key={key}><a href={articles[key].url} ta
 const StyledApp = styled.div`
  text-align: center;
  padding:20px 50px;
- width: 70%;
+ width: 80%;
  margin: 0 auto;
 `;
 const StyledHeading = styled.div`
@@ -51,6 +51,14 @@ const StyledDropDown = styled.div`
   background-repeat: no-repeat;
  }
 `;
+const Button = styled.button`
+  padding: 10px;
+  background: #fff;
+  border: 3px solid red;
+  color: red;
+  font-weight:bold;
+  cursor:pointer;
+`;
 const ResultData = styled.div`
  width:55%;
  margin:50px auto;
@@ -64,16 +72,26 @@ const ResultData = styled.div`
    line-height:40px;;
   text-decoration:underline;
  }
+ ul{
+     list-style: none;
+ }
+ li{
+   border-bottom:1px solid #000;
+   a{
+     text-decoration: none;
+     color:#0a0a0a;
+   }
+   span{
+     background:#999999;
+     padding:5px 30px;
+     border-radius:20px;
+     margin-left:20px;
+     color:#fff;
+     font-size: 12px;
+     line-height: 40px;
+   }
  }
 
-`;
-const Button = styled.button`
-  padding: 10px;
-  background: #fff;
-  border: 3px solid red;
-  color: red;
-  font-weight:bold;
-  cursor:pointer;
 `;
 class Feed extends Component {
     constructor(props) {
